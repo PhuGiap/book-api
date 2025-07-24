@@ -6,6 +6,7 @@ exports.getAllBooks = async (req, res) => {
     const result = await pool.query('SELECT * FROM books ORDER BY id');
     res.json({ status: 'success', data: result.rows });
   } catch (error) {
+    console.error('❌ Error in getAllBooks:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -18,7 +19,8 @@ exports.getBookById = async (req, res) => {
     if (result.rows.length === 0)
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     res.json({ status: 'success', data: result.rows[0] });
-  } catch {
+  } catch (error) {
+    console.error('❌ Error in getBookById:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -36,7 +38,8 @@ exports.createBook = async (req, res) => {
       [title, author, publishedDate, genre, summary]
     );
     res.status(201).json({ status: 'success', data: result.rows[0] });
-  } catch {
+  } catch (error) {
+    console.error('❌ Error in createBook:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -57,7 +60,8 @@ exports.updateBook = async (req, res) => {
     if (result.rows.length === 0)
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     res.json({ status: 'success', data: result.rows[0] });
-  } catch {
+  } catch (error) {
+    console.error('❌ Error in updateBook:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -70,7 +74,8 @@ exports.deleteBook = async (req, res) => {
     if (result.rows.length === 0)
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     res.json({ status: 'success', message: 'Book deleted' });
-  } catch {
+  } catch (error) {
+    console.error('❌ Error in deleteBook:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
