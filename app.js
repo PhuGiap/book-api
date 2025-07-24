@@ -2,16 +2,18 @@ const express = require('express');
 require('dotenv').config();
 const bookRoutes = require('./routes/bookRoutes');
 const cors = require('cors');
+const setupSwagger = require('./swagger'); // ✅ Sửa ở đây
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
+
 app.use(cors());
 app.use(express.json());
 app.use('/api', bookRoutes);
-console.log('📦 Book routes mounted at /api');
 
-
+setupSwagger(app); // ✅ Thêm dòng này để tích hợp Swagger
 app.get('/', (req, res) => {
   res.send('Book API is running...');
 });

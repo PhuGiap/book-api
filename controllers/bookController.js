@@ -71,16 +71,26 @@ exports.updateBook = async (req, res) => {
 };
 
 // DELETE book
+
+
 exports.deleteBook = async (req, res) => {
-  const { id } = req.params;
+  const id = parseInt(req.params.id);
+
   try {
-    const result = await pool.query('DELETE FROM books WHERE id=$1 RETURNING *', [id]);
-    if (result.rows.length === 0)
-      return res.status(404).json({ status: 'error', message: 'Book not found' });
-    res.json({ status: 'success', message: 'Book deleted' });
-  } catch (error) {
-    console.log(error);
-    console.error('❌ Error in deleteBook:', error);
-    res.status(500).json({ status: 'error', message: 'Server error' });
+    const result = await pool.query('DELETE FROM books WHERE id = $1 RETURNING *', [id]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ status: 'fail', message: 'Book not found' });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Book deleted successfully',
+      data: result.rows[0],
+    });
+  } catch (err) {
+    console.error('Error deleting book:', err);
+    res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 };
+
