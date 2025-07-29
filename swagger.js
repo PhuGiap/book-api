@@ -29,6 +29,7 @@ const options = {
             title: { type: 'string', example: 'Clean Code' },
             author: { type: 'string', example: 'Robert C. Martin' },
             published_date: { type: 'string', format: 'date', example: '2008-08-01' },
+            pages: { type: 'integer', example: 350 },
             genre: { type: 'string', example: 'Software Engineering' },
             summary: { type: 'string', example: 'A handbook of agile software craftsmanship.' },
             created_at: { type: 'string', format: 'date-time' },
