@@ -1,5 +1,5 @@
 const pool = require('../db');
-
+const dayjs = require('dayjs');
 
 // GET all books with pagination
 exports.getAllBooks = async (req, res) => {
@@ -7,14 +7,11 @@ exports.getAllBooks = async (req, res) => {
 
   page = parseInt(page);
   limit = parseInt(limit);
-
   const offset = (page - 1) * limit;
 
   try {
-    // Lấy tổng số bản ghi
     const countResult = await pool.query('SELECT COUNT(*) FROM books');
     const totalItems = parseInt(countResult.rows[0].count);
-
     const totalPages = Math.ceil(totalItems / limit);
 
     const result = await pool.query(
@@ -22,9 +19,16 @@ exports.getAllBooks = async (req, res) => {
       [limit, offset]
     );
 
+    const books = result.rows.map(book => ({
+      ...book,
+      published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
+      created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
+      updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
+    }));
+
     res.json({
       status: 'success',
-      data: result.rows,
+      data: books,
       pagination: {
         totalItems,
         totalPages,
@@ -38,7 +42,6 @@ exports.getAllBooks = async (req, res) => {
   }
 };
 
-
 // GET book by ID
 exports.getBookById = async (req, res, next) => {
   const { id } = req.params;
@@ -47,7 +50,16 @@ exports.getBookById = async (req, res, next) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     }
-    res.json({ status: 'success', data: result.rows[0] });
+    const book = result.rows[0];
+    res.json({
+      status: 'success',
+      data: {
+        ...book,
+        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
+        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
+        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
+      }
+    });
   } catch (error) {
     console.error('Error in getBookById:', error);
     next(error);
@@ -66,7 +78,16 @@ exports.createBook = async (req, res, next) => {
        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *`,
       [title, author, publishedDate, pages, genre, summary]
     );
-    res.status(201).json({ status: 'success', data: result.rows[0] });
+    const book = result.rows[0];
+    res.status(201).json({
+      status: 'success',
+      data: {
+        ...book,
+        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
+        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
+        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
+      }
+    });
   } catch (error) {
     console.error('Error in createBook:', error);
     next(error);
@@ -89,7 +110,16 @@ exports.updateBook = async (req, res, next) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     }
-    res.json({ status: 'success', data: result.rows[0] });
+    const book = result.rows[0];
+    res.json({
+      status: 'success',
+      data: {
+        ...book,
+        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
+        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
+        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
+      }
+    });
   } catch (error) {
     console.error('Error in updateBook:', error);
     next(error);
@@ -104,7 +134,17 @@ exports.deleteBook = async (req, res, next) => {
     if (result.rowCount === 0) {
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     }
-    res.json({ status: 'success', message: 'Book deleted successfully', data: result.rows[0] });
+    const book = result.rows[0];
+    res.json({
+      status: 'success',
+      message: 'Book deleted successfully',
+      data: {
+        ...book,
+        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
+        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
+        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
+      }
+    });
   } catch (error) {
     console.error('Error in deleteBook:', error);
     next(error);
