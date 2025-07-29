@@ -12,8 +12,8 @@ const options = {
     },
     servers: [
       {
-        url: 'https://book-api-1-98o3.onrender.com',
-        description: 'Local server',
+        url: 'https://book-api-1-98o3.onrender.com/api',
+        description: 'Render server',
       },
       {
         url: 'https://your-deploy-url',

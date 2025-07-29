@@ -2,7 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const bookRoutes = require('./routes/bookRoutes');
 const cors = require('cors');
-const setupSwagger = require('./swagger'); // ✅ Sửa ở đây
+const setupSwagger = require('./swagger'); 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
