@@ -35,7 +35,7 @@ exports.createBook = async (req, res) => {
   }
 
   try {
-    const parsedDate = new Date(publishedDate); // Convert to Date
+    const parsedDate = publishedDate; // Convert to Date
     const result = await pool.query(
       `INSERT INTO books (title, author, published_date, pages, genre, summary, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *`,
@@ -58,7 +58,7 @@ exports.updateBook = async (req, res) => {
   }
 
   try {
-    const parsedDate = new Date(publishedDate); // Convert to Date
+    const parsedDate = publishedDate; // Convert to Date
     const result = await pool.query(
       `UPDATE books
        SET title = $1, author = $2, published_date = $3, pages = $4, genre = $5, summary = $6, updated_at = NOW()
