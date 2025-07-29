@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', bookRoutes);
 
-setupSwagger(app); // ✅ Thêm dòng này để tích hợp Swagger
+setupSwagger(app); 
 app.get('/', (req, res) => {
   res.send('Book API is running...');
 });
