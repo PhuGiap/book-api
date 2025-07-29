@@ -1,4 +1,3 @@
-const path = require('path');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -12,12 +11,12 @@ const options = {
     },
     servers: [
       {
-        url: 'https://book-api-1-98o3.onrender.com/api',
-        description: 'Render server',
+        url: 'http://localhost:5000/api',
+        description: 'Local server',
       },
       {
-        url: 'https://your-deploy-url',
-        description: 'Deployed server',
+        url: 'https://book-api-1-98o3.onrender.com/api', // cập nhật URL production
+        description: 'Production server',
       },
     ],
     components: {
@@ -38,11 +37,12 @@ const options = {
         },
         BookInput: {
           type: 'object',
-          required: ['title', 'author', 'publishedDate', 'genre', 'summary'],
+          required: ['title', 'author', 'publishedDate', 'pages', 'genre', 'summary'],
           properties: {
             title: { type: 'string', example: 'Clean Code' },
             author: { type: 'string', example: 'Robert C. Martin' },
             publishedDate: { type: 'string', format: 'date', example: '2008-08-01' },
+            pages: { type: 'integer', example: 350 },
             genre: { type: 'string', example: 'Software Engineering' },
             summary: { type: 'string', example: 'A handbook of agile software craftsmanship.' },
           },
@@ -50,7 +50,7 @@ const options = {
       },
     },
   },
-  apis: [path.join(__dirname, './routes/*.js')],
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsDoc(options);
