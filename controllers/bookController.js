@@ -6,7 +6,7 @@ exports.getAllBooks = async (req, res) => {
     const result = await pool.query('SELECT * FROM books ORDER BY id');
     res.json({ status: 'success', data: result.rows });
   } catch (error) {
-    console.error('❌ Error in getAllBooks:', error.message);
+    console.error('Error detail:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -21,7 +21,7 @@ exports.getBookById = async (req, res) => {
     }
     res.json({ status: 'success', data: result.rows[0] });
   } catch (error) {
-    console.error('❌ Error in getBookById:', error.message);
+    console.error('Error detail:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -43,7 +43,7 @@ exports.createBook = async (req, res) => {
     );
     res.status(201).json({ status: 'success', data: result.rows[0] });
   } catch (error) {
-    console.error('❌ Error in createBook:', error);
+    console.error('Error detail:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -73,7 +73,7 @@ exports.updateBook = async (req, res) => {
 
     res.json({ status: 'success', data: result.rows[0] });
   } catch (error) {
-    console.error('❌ Error in updateBook:', error.message);
+    console.error('Error detail:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
@@ -95,7 +95,7 @@ exports.deleteBook = async (req, res) => {
       data: result.rows[0],
     });
   } catch (error) {
-    console.error('❌ Error in deleteBook:', error.message);
+    console.error('Error detail:', error);
     res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
