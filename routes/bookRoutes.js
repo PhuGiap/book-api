@@ -104,7 +104,7 @@ router.get('/books/:id', controller.getBookById);
  *                       type: integer
  *                       example: 10
  */
-router.get('/books', controller.getAllBooks);
+
 
 router.post('/books', controller.createBook);
 
