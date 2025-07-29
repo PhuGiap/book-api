@@ -1,1 +1,2 @@
 .env 
+-e "node_modules/\npackage-lock.json\n.env" 
