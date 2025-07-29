@@ -57,21 +57,55 @@ router.get('/books/:id', controller.getBookById);
 /**
  * @swagger
  * /books:
- *   post:
- *     summary: Tạo sách mới
+ *   get:
+ *     summary: Lấy danh sách tất cả sách có phân trang
  *     tags: [Books]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/BookInput'
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Số trang muốn lấy
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Số sách mỗi trang
  *     responses:
- *       201:
- *         description: Tạo thành công
- *       400:
- *         description: Dữ liệu không hợp lệ
+ *       200:
+ *         description: Thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Book'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     totalItems:
+ *                       type: integer
+ *                       example: 100
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     pageSize:
+ *                       type: integer
+ *                       example: 10
  */
+router.get('/books', controller.getAllBooks);
+
 router.post('/books', controller.createBook);
 
 /**

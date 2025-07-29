@@ -1,15 +1,43 @@
 const pool = require('../db');
 
-// GET all books
-exports.getAllBooks = async (req, res, next) => {
+
+// GET all books with pagination
+exports.getAllBooks = async (req, res) => {
+  let { page = 1, limit = 10 } = req.query;
+
+  page = parseInt(page);
+  limit = parseInt(limit);
+
+  const offset = (page - 1) * limit;
+
   try {
-    const result = await pool.query('SELECT * FROM books ORDER BY id');
-    res.json({ status: 'success', data: result.rows });
+    // Lấy tổng số bản ghi
+    const countResult = await pool.query('SELECT COUNT(*) FROM books');
+    const totalItems = parseInt(countResult.rows[0].count);
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const result = await pool.query(
+      'SELECT * FROM books ORDER BY id LIMIT $1 OFFSET $2',
+      [limit, offset]
+    );
+
+    res.json({
+      status: 'success',
+      data: result.rows,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: page,
+        pageSize: limit,
+      },
+    });
   } catch (error) {
-    console.error('Error in getAllBooks:', error);
-    next(error);
+    console.error('❌ Error in getAllBooks:', error.message);
+    res.status(500).json({ status: 'error', message: 'Server error' });
   }
 };
+
 
 // GET book by ID
 exports.getBookById = async (req, res, next) => {
