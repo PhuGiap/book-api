@@ -35,10 +35,11 @@ exports.createBook = async (req, res) => {
   }
 
   try {
+    const parsedDate = new Date(publishedDate); // Convert to Date
     const result = await pool.query(
       `INSERT INTO books (title, author, published_date, pages, genre, summary, created_at, updated_at)
        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *`,
-      [title, author, publishedDate, pages, genre, summary]
+      [title, author, parsedDate, pages, genre, summary]
     );
     res.status(201).json({ status: 'success', data: result.rows[0] });
   } catch (error) {
@@ -47,23 +48,23 @@ exports.createBook = async (req, res) => {
   }
 };
 
-
 // PUT update book
 exports.updateBook = async (req, res) => {
   const { id } = req.params;
-  const { title, author, publishedDate, genre, summary } = req.body;
+  const { title, author, publishedDate, pages, genre, summary } = req.body;
 
-  if (!title || !author || !publishedDate || !genre || !summary) {
+  if (!title || !author || !publishedDate || !pages || !genre || !summary) {
     return res.status(400).json({ status: 'error', message: 'Missing required fields' });
   }
 
   try {
+    const parsedDate = new Date(publishedDate); // Convert to Date
     const result = await pool.query(
       `UPDATE books
-       SET title = $1, author = $2, published_date = $3, genre = $4, summary = $5, updated_at = NOW()
-       WHERE id = $6
+       SET title = $1, author = $2, published_date = $3, pages = $4, genre = $5, summary = $6, updated_at = NOW()
+       WHERE id = $7
        RETURNING *`,
-      [title, author, publishedDate, genre, summary, id]
+      [title, author, parsedDate, pages, genre, summary, id]
     );
 
     if (result.rows.length === 0) {
