@@ -11,13 +11,14 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000/api',
-        description: 'Local server',
-      },
-      {
         url: 'https://book-api-1-98o3.onrender.com/api', // cập nhật URL production
         description: 'Production server',
       },
+      {
+        url: 'http://localhost:5000/api',
+        description: 'Local server',
+      },
+      
     ],
     components: {
       schemas: {
