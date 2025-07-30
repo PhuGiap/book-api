@@ -11,11 +11,11 @@ const options = {
     },
     servers: [
       {
-        url: 'https://book-api-1-98o3.onrender.com', // production
+        url: 'https://book-api-1-98o3.onrender.com/api', // 👈 thêm `/api` vì các route đều dùng prefix này
         description: 'Production server',
       },
       {
-        url: 'http://localhost:5000',
+        url: 'http://localhost:5000/api',
         description: 'Local server',
       },
     ],
@@ -50,13 +50,13 @@ const options = {
       },
     },
   },
-  apis: ['./routes/*.js'],
+  apis: ['./routes/*.js'], // Swagger đọc từ file route
 };
 
 const swaggerSpec = swaggerJsDoc(options);
 
 const setupSwagger = (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // ✅ Không dùng presets
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Không cần presets
 };
 
 module.exports = setupSwagger;
