@@ -2,45 +2,27 @@ const pool = require('../db');
 const dayjs = require('dayjs');
 
 // GET all books with pagination
-exports.getAllBooks = async (req, res) => {
-  let { page = 1, limit = 10 } = req.query;
-
-  page = parseInt(page);
-  limit = parseInt(limit);
-  const offset = (page - 1) * limit;
-
+exports.getAllBooks = async (req, res, next) => {
   try {
-    const countResult = await pool.query('SELECT COUNT(*) FROM books');
-    const totalItems = parseInt(countResult.rows[0].count);
-    const totalPages = Math.ceil(totalItems / limit);
+    let { page = 1, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit;
+
+    console.log('Fetching books with:', { page, limit, offset });
 
     const result = await pool.query(
       'SELECT * FROM books ORDER BY id LIMIT $1 OFFSET $2',
       [limit, offset]
     );
 
-    const books = result.rows.map(book => ({
-      ...book,
-      published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
-      created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
-      updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
-    }));
-
-    res.json({
-      status: 'success',
-      data: books,
-      pagination: {
-        totalItems,
-        totalPages,
-        currentPage: page,
-        pageSize: limit,
-      },
-    });
-  } catch (error) {
-    console.error('❌ Error in getAllBooks:', error.message);
-    res.status(500).json({ status: 'error', message: 'Server error' });
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error in getAllBooks:', err); // ⚠️ Log lỗi ra server
+    next(err); // Gửi lỗi cho middleware xử lý lỗi
   }
 };
+
 
 // GET book by ID
 exports.getBookById = async (req, res, next) => {
