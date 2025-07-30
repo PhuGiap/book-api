@@ -11,11 +11,11 @@ const options = {
     },
     servers: [
       {
-        url: 'https://book-api-1-98o3.onrender.com', // ✅ Production server
+        url: 'https://book-api-1-98o3.onrender.com', // production
         description: 'Production server',
       },
       {
-        url: 'http://localhost:5000', // ✅ Local server
+        url: 'http://localhost:5000',
         description: 'Local server',
       },
     ],
@@ -56,16 +56,7 @@ const options = {
 const swaggerSpec = swaggerJsDoc(options);
 
 const setupSwagger = (app) => {
-  app.use(
-    '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec, {
-      explorer: true,
-      swaggerOptions: {
-        presets: [swaggerUi.presets.apis], // ✅ Bỏ SwaggerUIStandalonePreset để fix lỗi
-      },
-    })
-  );
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // ✅ Không dùng presets
 };
 
 module.exports = setupSwagger;
