@@ -28,7 +28,7 @@ const userController = require('../controllers/userController');
  *       400:
  *         description: Email đã tồn tại
  */
-router.post('/users/register', userController.registerUser);
+router.post('/register', userController.registerUser);
 
 // Đăng nhập
 /**
@@ -54,18 +54,18 @@ router.post('/users/register', userController.registerUser);
  *       400:
  *         description: Thông tin không hợp lệ
  */
-router.post('/users/login', userController.loginUser);
+router.post('/login', userController.loginUser);
 
 // Lấy tất cả người dùng
-router.get('/users', userController.getUsers);
+router.get('/', userController.getUsers);
 
 // Lấy người dùng theo ID
-router.get('/users/:id', userController.getUser);
+router.get('/:id', userController.getUser);
 
 // Cập nhật người dùng
-router.put('/users/:id', userController.updateUser);
+router.put('/:id', userController.updateUser);
 
 // Xóa người dùng
-router.delete('/users/:id', userController.deleteUser);
+router.delete('/:id', userController.deleteUser);
 
 module.exports = router;
