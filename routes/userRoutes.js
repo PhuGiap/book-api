@@ -9,44 +9,12 @@ const userController = require('../controllers/userController');
  *   description: API quản lý người dùng
  */
 
+// Đăng ký
 /**
  * @swagger
- * /users:
- *   get:
- *     summary: Lấy danh sách tất cả người dùng
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: Thành công
- */
-router.get('/users', userController.getAllUsers);
-
-/**
- * @swagger
- * /users/{id}:
- *   get:
- *     summary: Lấy chi tiết người dùng theo ID
- *     tags: [Users]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID người dùng
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Thành công
- *       404:
- *         description: Không tìm thấy người dùng
- */
-router.get('/users/:id', userController.getUserById);
-
-/**
- * @swagger
- * /users:
+ * /users/register:
  *   post:
- *     summary: Tạo người dùng mới
+ *     summary: Đăng ký người dùng mới
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -58,56 +26,46 @@ router.get('/users/:id', userController.getUserById);
  *       201:
  *         description: Tạo mới thành công
  *       400:
- *         description: Dữ liệu không hợp lệ hoặc email đã tồn tại
+ *         description: Email đã tồn tại
  */
-router.post('/users', userController.createUser);
+router.post('/users/register', userController.registerUser);
 
+// Đăng nhập
 /**
  * @swagger
- * /users/{id}:
- *   put:
- *     summary: Cập nhật thông tin người dùng
+ * /users/login:
+ *   post:
+ *     summary: Đăng nhập người dùng
  *     tags: [Users]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID người dùng cần cập nhật
- *         schema:
- *           type: integer
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserInput'
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Cập nhật thành công
- *       404:
- *         description: Không tìm thấy người dùng
+ *         description: Đăng nhập thành công
+ *       400:
+ *         description: Thông tin không hợp lệ
  */
+router.post('/users/login', userController.loginUser);
+
+// Lấy tất cả người dùng
+router.get('/users', userController.getUsers);
+
+// Lấy người dùng theo ID
+router.get('/users/:id', userController.getUser);
+
+// Cập nhật người dùng
 router.put('/users/:id', userController.updateUser);
 
-/**
- * @swagger
- * /users/{id}:
- *   delete:
- *     summary: Xóa người dùng
- *     tags: [Users]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID người dùng cần xóa
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Xóa thành công
- *       404:
- *         description: Không tìm thấy người dùng
- */
+// Xóa người dùng
 router.delete('/users/:id', userController.deleteUser);
 
 module.exports = router;
