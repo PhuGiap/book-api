@@ -7,11 +7,11 @@ const options = {
     info: {
       title: 'Book API',
       version: '1.0.0',
-      description: 'A simple RESTful API for managing books',
+      description: 'A simple RESTful API for managing books and users',
     },
     servers: [
       {
-        url: 'https://book-api-1-98o3.onrender.com/api', // 👈 thêm `/api` vì các route đều dùng prefix này
+        url: 'https://book-api-1-98o3.onrender.com/api',
         description: 'Production server',
       },
       {
@@ -21,6 +21,7 @@ const options = {
     ],
     components: {
       schemas: {
+        // 📚 Book Schemas
         Book: {
           type: 'object',
           properties: {
@@ -47,16 +48,46 @@ const options = {
             summary: { type: 'string', example: 'A handbook of agile software craftsmanship.' },
           },
         },
+
+        // 👤 User Schemas
+        User: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'John Doe' },
+            email: { type: 'string', format: 'email', example: 'john@example.com' },
+            role: { type: 'string', example: 'user' },
+            created_at: { type: 'string', format: 'date-time' },
+            updated_at: { type: 'string', format: 'date-time' },
+          },
+        },
+        UserInput: {
+          type: 'object',
+          required: ['name', 'email', 'password'],
+          properties: {
+            name: { type: 'string', example: 'John Doe' },
+            email: { type: 'string', format: 'email', example: 'john@example.com' },
+            password: { type: 'string', example: 'securePassword123' },
+          },
+        },
+        UserLogin: {
+          type: 'object',
+          required: ['email', 'password'],
+          properties: {
+            email: { type: 'string', format: 'email', example: 'john@example.com' },
+            password: { type: 'string', example: 'securePassword123' },
+          },
+        },
       },
     },
   },
-  apis: ['./routes/*.js'], // Swagger đọc từ file route
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsDoc(options);
 
 const setupSwagger = (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Không cần presets
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };
 
 module.exports = setupSwagger;
