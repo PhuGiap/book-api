@@ -1,5 +1,5 @@
 const pool = require('../db');
-const dayjs = require('dayjs');
+const { formatBookResponse } = require('../helpers/format');
 
 // GET all books with pagination
 exports.getAllBooks = async (req, res, next) => {
@@ -9,20 +9,30 @@ exports.getAllBooks = async (req, res, next) => {
     limit = parseInt(limit);
     const offset = (page - 1) * limit;
 
-    console.log('Fetching books with:', { page, limit, offset });
-
     const result = await pool.query(
       'SELECT * FROM books ORDER BY id LIMIT $1 OFFSET $2',
       [limit, offset]
     );
 
-    res.json(result.rows);
+    const totalResult = await pool.query('SELECT COUNT(*) FROM books');
+    const totalItems = parseInt(totalResult.rows[0].count);
+    const totalPages = Math.ceil(totalItems / limit);
+
+    res.json({
+      status: 'success',
+      data: result.rows.map(formatBookResponse),
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages
+      }
+    });
   } catch (err) {
-    console.error('Error in getAllBooks:', err); // ⚠️ Log lỗi ra server
-    next(err); // Gửi lỗi cho middleware xử lý lỗi
+    console.error('Error in getAllBooks:', err);
+    next(err);
   }
 };
-
 
 // GET book by ID
 exports.getBookById = async (req, res, next) => {
@@ -32,15 +42,9 @@ exports.getBookById = async (req, res, next) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     }
-    const book = result.rows[0];
     res.json({
       status: 'success',
-      data: {
-        ...book,
-        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
-        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
-        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
-      }
+      data: formatBookResponse(result.rows[0])
     });
   } catch (error) {
     console.error('Error in getBookById:', error);
@@ -60,15 +64,9 @@ exports.createBook = async (req, res, next) => {
        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *`,
       [title, author, publishedDate, pages, genre, summary]
     );
-    const book = result.rows[0];
     res.status(201).json({
       status: 'success',
-      data: {
-        ...book,
-        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
-        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
-        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
-      }
+      data: formatBookResponse(result.rows[0])
     });
   } catch (error) {
     console.error('Error in createBook:', error);
@@ -92,15 +90,9 @@ exports.updateBook = async (req, res, next) => {
     if (result.rows.length === 0) {
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     }
-    const book = result.rows[0];
     res.json({
       status: 'success',
-      data: {
-        ...book,
-        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
-        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
-        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
-      }
+      data: formatBookResponse(result.rows[0])
     });
   } catch (error) {
     console.error('Error in updateBook:', error);
@@ -116,16 +108,10 @@ exports.deleteBook = async (req, res, next) => {
     if (result.rowCount === 0) {
       return res.status(404).json({ status: 'error', message: 'Book not found' });
     }
-    const book = result.rows[0];
     res.json({
       status: 'success',
       message: 'Book deleted successfully',
-      data: {
-        ...book,
-        published_date: dayjs(book.published_date).format('YYYY-MM-DD'),
-        created_at: dayjs(book.created_at).format('YYYY-MM-DD'),
-        updated_at: dayjs(book.updated_at).format('YYYY-MM-DD'),
-      }
+      data: formatBookResponse(result.rows[0])
     });
   } catch (error) {
     console.error('Error in deleteBook:', error);
