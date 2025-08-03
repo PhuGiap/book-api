@@ -2,13 +2,13 @@ const pool = require('../db');
 
 // Get all users
 exports.getAllUsers = async () => {
-  const result = await pool.query('SELECT * FROM users ORDER BY id');
+  const result = await pool.query(`SELECT id, name, email, role, TO_CHAR(createdat, 'YYYY-MM-DD') AS createdat FROM users ORDER BY id`);
   return result.rows;
 };
 
 // Get a user by ID
 exports.getUserById = async (id) => {
-  const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+  const result = await pool.query(`SELECT id, name, email, role, TO_CHAR(createdat, 'YYYY-MM-DD') AS createdat FROM users WHERE id = $1`, [id]);
   return result.rows[0];
 };
 

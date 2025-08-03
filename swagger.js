@@ -60,15 +60,6 @@ const options = {
             createdat: { type: 'string', format: 'date-time' },
           },
         },
-        UserInput: {
-          type: 'object',
-          required: ['name', 'email'],
-          properties: {
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', format: 'email', example: 'john@example.com' },
-            role: { type: 'string', example: 'user' },
-          },
-        },
       },
     },
     tags: [

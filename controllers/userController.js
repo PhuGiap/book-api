@@ -1,10 +1,17 @@
 const userModel = require('../models/userModel');
 
+// Hàm định dạng ngày YYYY-MM-DD
+const formatUserDate = (user) => ({
+  ...user,
+  createdat: user.createdat ? user.createdat.toISOString().split('T')[0] : null,
+});
+
 // GET all users
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await userModel.getAllUsers();
-    res.json(users);
+    const formattedUsers = users.map(formatUserDate);
+    res.json(formattedUsers);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -15,7 +22,7 @@ exports.getUserById = async (req, res) => {
   try {
     const user = await userModel.getUserById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json(user);
+    res.json(formatUserDate(user));
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -25,7 +32,7 @@ exports.getUserById = async (req, res) => {
 exports.createUser = async (req, res) => {
   try {
     const newUser = await userModel.createUser(req.body);
-    res.status(201).json(newUser);
+    res.status(201).json(formatUserDate(newUser));
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -36,7 +43,7 @@ exports.updateUser = async (req, res) => {
   try {
     const updatedUser = await userModel.updateUser(req.params.id, req.body);
     if (!updatedUser) return res.status(404).json({ message: 'User not found' });
-    res.json(updatedUser);
+    res.json(formatUserDate(updatedUser));
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
