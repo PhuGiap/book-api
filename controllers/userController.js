@@ -1,53 +1,54 @@
-// controller sửa lại như sau
-const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
-exports.registerUser = async (req, res) => {
+// GET all users
+exports.getAllUsers = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-    const existingUser = await userModel.getByEmail(email); // ✅
-    if (existingUser) return res.status(400).json({ message: 'Email already exists' });
+    const users = await userModel.getAllUsers();
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await userModel.create({ name, email, password: hashedPassword, role }); // ✅
+// GET user by ID
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await userModel.getUserById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// POST create user
+exports.createUser = async (req, res) => {
+  try {
+    const newUser = await userModel.createUser(req.body);
     res.status(201).json(newUser);
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await userModel.getByEmail(email); // ✅
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-    res.json({ message: 'Login successful', user: { id: user.id, name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
-};
-
-exports.getUsers = async (req, res) => {
-  const users = await userModel.getAll(); // ✅
-  res.json(users);
-};
-
-exports.getUser = async (req, res) => {
-  const user = await userModel.getById(req.params.id); // ✅
-  if (!user) return res.status(404).json({ message: 'User not found' });
-  res.json(user);
-};
-
+// PUT update user
 exports.updateUser = async (req, res) => {
-  const user = await userModel.update(req.params.id, req.body); // ✅
-  res.json(user);
+  try {
+    const updatedUser = await userModel.updateUser(req.params.id, req.body);
+    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
+// DELETE user
 exports.deleteUser = async (req, res) => {
-  await userModel.delete(req.params.id); // ✅
-  res.json({ message: 'User deleted' });
+  try {
+    const deletedUser = await userModel.deleteUser(req.params.id);
+    if (!deletedUser) return res.status(404).json({ message: 'User not found' });
+    res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };

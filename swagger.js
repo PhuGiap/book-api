@@ -49,7 +49,7 @@ const options = {
           },
         },
 
-        // 👤 User Schemas
+        // 👤 User Schema (tối giản, không có password)
         User: {
           type: 'object',
           properties: {
@@ -57,25 +57,16 @@ const options = {
             name: { type: 'string', example: 'John Doe' },
             email: { type: 'string', format: 'email', example: 'john@example.com' },
             role: { type: 'string', example: 'user' },
-            created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' },
+            createdat: { type: 'string', format: 'date-time' },
           },
         },
         UserInput: {
           type: 'object',
-          required: ['name', 'email', 'password'],
+          required: ['name', 'email'],
           properties: {
             name: { type: 'string', example: 'John Doe' },
             email: { type: 'string', format: 'email', example: 'john@example.com' },
-            password: { type: 'string', example: 'securePassword123' },
-          },
-        },
-        UserLogin: {
-          type: 'object',
-          required: ['email', 'password'],
-          properties: {
-            email: { type: 'string', format: 'email', example: 'john@example.com' },
-            password: { type: 'string', example: 'securePassword123' },
+            role: { type: 'string', example: 'user' },
           },
         },
       },
