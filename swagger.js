@@ -49,7 +49,7 @@ const options = {
           },
         },
 
-        // 👤 User Schema (tối giản, không có password)
+        // 👤 User Schemas
         User: {
           type: 'object',
           properties: {
@@ -71,8 +71,18 @@ const options = {
         },
       },
     },
+    tags: [
+      {
+        name: 'Books',
+        description: 'API quản lý sách',
+      },
+      {
+        name: 'Users',
+        description: 'API quản lý người dùng',
+      },
+    ],
   },
-  apis: ['./routes/*.js'],
+  apis: ['./routes/*.js'], // Đảm bảo các file trong routes có chú thích Swagger
 };
 
 const swaggerSpec = swaggerJsDoc(options);
