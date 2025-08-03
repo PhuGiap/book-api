@@ -60,6 +60,15 @@ const options = {
             createdat: { type: 'string', format: 'date-time' },
           },
         },
+        UserInput: {
+          type: 'object',
+          required: ['name', 'email', 'role'],
+          properties: {
+            name: { type: 'string', example: 'John Doe' },
+            email: { type: 'string', format: 'email', example: 'john@example.com' },
+            role: { type: 'string', example: 'user' },
+          },
+        },
       },
     },
     tags: [
@@ -73,7 +82,7 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/*.js'], // Đảm bảo các file trong routes có chú thích Swagger
+  apis: ['./routes/*.js'], // đảm bảo bạn có @swagger trong các file route
 };
 
 const swaggerSpec = swaggerJsDoc(options);
