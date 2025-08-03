@@ -3,18 +3,18 @@ const cors = require('cors');
 require('dotenv').config();
 
 const bookRoutes = require('./routes/bookRoutes');
+const userRoutes = require('./routes/userRoutes');
 const setupSwagger = require('./swagger');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes);
 
 app.use(cors());
 app.use(express.json());
 
-// Prefix API chuẩn hóa
-app.use('/api', bookRoutes);
+// Route chuẩn hóa
+app.use('/api/books', bookRoutes);
+app.use('/api/users', userRoutes);
 
 // Swagger UI
 setupSwagger(app);
