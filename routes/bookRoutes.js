@@ -9,14 +9,14 @@ const bookController = require('../controllers/bookController');
  *   description: API quản lý sách
  */
 
-router.get('/books', bookController.getAllBooks);
+router.get('/', bookController.getAllBooks);
 
-router.get('/books/:id', bookController.getBookById);
+router.get('/:id', bookController.getBookById);
 
-router.post('/books', bookController.createBook);
+router.post('/', bookController.createBook);
 
-router.put('/books/:id', bookController.updateBook);
+router.put('/:id', bookController.updateBook);
 
-router.delete('/books/:id', bookController.deleteBook);
+router.delete('/:id', bookController.deleteBook);
 
 module.exports = router;
