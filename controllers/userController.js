@@ -1,9 +1,14 @@
 const userModel = require('../models/userModel');
 
 // Hàm định dạng ngày YYYY-MM-DD
+// const formatUserDate = (user) => ({
+//   ...user,
+//   createdat: user.createdat ? user.createdat.toISOString().split('T')[0] : null,
+// });
+
 const formatUserDate = (user) => ({
   ...user,
-  createdat: user.createdat ? user.createdat.toISOString().split('T')[0] : null,
+  createdAt: new Date(user.created_at)?.toISOString().split('T')[0] ?? null,
 });
 
 // GET all users
@@ -14,7 +19,7 @@ exports.getAllUsers = async (req, res) => {
     res.json(formattedUsers);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server errorrrr' });
   }
 };
 
@@ -35,6 +40,7 @@ exports.createUser = async (req, res) => {
     const newUser = await userModel.createUser(req.body);
     res.status(201).json(formatUserDate(newUser));
   } catch (err) {
+    console.error(err)
     res.status(500).json({ message: 'Server error' });
   }
 };

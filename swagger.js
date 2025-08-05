@@ -1,5 +1,6 @@
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
 const options = {
   definition: {
@@ -82,13 +83,16 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/*.js'], // đảm bảo bạn có @swagger trong các file route
+  apis: [
+  path.join(__dirname, './routes/bookRoutes.js'),
+  path.join(__dirname, './routes/userRoutes.js'),
+] 
 };
-
 const swaggerSpec = swaggerJsDoc(options);
-
 const setupSwagger = (app) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  console.log('Swagger UI path:', '/api-docs');
+
 };
 
 module.exports = setupSwagger;
