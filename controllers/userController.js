@@ -15,8 +15,8 @@ const formatUserDate = (user) => ({
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await userModel.getAllUsers();
-    const formattedUsers = users.map(formatUserDate);
-    res.json(formattedUsers);
+    // const formattedUsers = users.map(formatUserDate);
+    res.json(users);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server errorrrr' });

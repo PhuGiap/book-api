@@ -3,7 +3,9 @@ const BookModel = require('../models/bookModel');
 
 const formatDate = (book) => ({
   ...book,
-  createdAt: new Date(book.created_at)?.toISOString().split('T')[0] ?? null,
+  created_at: new Date(book.created_at)?.toISOString().split('T')[0] ?? null,
+  updated_at: new Date(book.updated_at)?.toISOString().split('T')[0] ?? null,
+  published_date: new Date(book.published_date)?.toISOString().split('T')[0] ?? null,
 });
 
 // GET all books
