@@ -1,11 +1,17 @@
 // controllers/bookController.js
 const BookModel = require('../models/bookModel');
 
+const formatDate = (book) => ({
+  ...book,
+  createdAt: new Date(book.created_at)?.toISOString().split('T')[0] ?? null,
+});
+
 // GET all books
 exports.getAllBooks = async (req, res) => {
   try {
     const books = await BookModel.getAll();
-    res.json(books);
+    const formattedBooks = books.map(formatDate);
+    res.json(formattedBooks);
   } catch (err) {
     console.error('Error getting books:', err);
     res.status(500).json({ message: 'Failed to get books' });
