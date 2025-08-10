@@ -1,11 +1,12 @@
-// controllers/bookController.js
 const BookModel = require('../models/bookModel');
+
+const safeFormatDate = (date) =>
+  date ? new Date(date).toISOString().split('T')[0] : null;
 
 const formatDate = (book) => ({
   ...book,
-  created_at: new Date(book.created_at)?.toISOString().split('T')[0] ?? null,
-  updated_at: new Date(book.updated_at)?.toISOString().split('T')[0] ?? null,
-  published_date: new Date(book.published_date)?.toISOString().split('T')[0] ?? null,
+  created_at: safeFormatDate(book.created_at),
+  updated_at: safeFormatDate(book.updated_at),
 });
 
 // GET all books
@@ -26,7 +27,7 @@ exports.getBookById = async (req, res) => {
   try {
     const book = await BookModel.getById(id);
     if (!book) return res.status(404).json({ message: 'Book not found' });
-    res.json(book);
+    res.json(formatDate(book));
   } catch (err) {
     console.error('Error getting book by ID:', err);
     res.status(500).json({ message: 'Failed to get book' });
@@ -37,7 +38,7 @@ exports.getBookById = async (req, res) => {
 exports.createBook = async (req, res) => {
   try {
     const book = await BookModel.create(req.body);
-    res.status(201).json(book);
+    res.status(201).json(formatDate(book));
   } catch (err) {
     console.error('Error creating book:', err);
     res.status(500).json({ message: 'Failed to create book' });
@@ -50,7 +51,7 @@ exports.updateBook = async (req, res) => {
   try {
     const updated = await BookModel.update(id, req.body);
     if (!updated) return res.status(404).json({ message: 'Book not found' });
-    res.json(updated);
+    res.json(formatDate(updated));
   } catch (err) {
     console.error('Error updating book:', err);
     res.status(500).json({ message: 'Failed to update book' });
@@ -63,7 +64,7 @@ exports.deleteBook = async (req, res) => {
   try {
     const deleted = await BookModel.delete(id);
     if (!deleted) return res.status(404).json({ message: 'Book not found' });
-    res.json({ message: 'Book deleted successfully', deleted });
+    res.json({ message: 'Successfully deleted', deleted: formatDate(deleted) });
   } catch (err) {
     console.error('Error deleting book:', err);
     res.status(500).json({ message: 'Failed to delete book' });

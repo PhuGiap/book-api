@@ -29,21 +29,19 @@ const options = {
             id: { type: 'integer', example: 1 },
             title: { type: 'string', example: 'Clean Code' },
             author: { type: 'string', example: 'Robert C. Martin' },
-            published_date: { type: 'string', format: 'date', example: '2008-08-01' },
             pages: { type: 'integer', example: 350 },
             genre: { type: 'string', example: 'Software Engineering' },
             summary: { type: 'string', example: 'A handbook of agile software craftsmanship.' },
-            created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' },
+            created_at: { type: 'string', example: '2025-08-10' },
+            updated_at: { type: 'string', example: '2025-08-10' },
           },
         },
         BookInput: {
           type: 'object',
-          required: ['title', 'author', 'publishedDate', 'pages', 'genre', 'summary'],
+          required: ['title', 'author', 'pages', 'genre', 'summary'],
           properties: {
             title: { type: 'string', example: 'Clean Code' },
             author: { type: 'string', example: 'Robert C. Martin' },
-            publishedDate: { type: 'string', format: 'date', example: '2008-08-01' },
             pages: { type: 'integer', example: 350 },
             genre: { type: 'string', example: 'Software Engineering' },
             summary: { type: 'string', example: 'A handbook of agile software craftsmanship.' },
@@ -58,7 +56,8 @@ const options = {
             name: { type: 'string', example: 'John Doe' },
             email: { type: 'string', format: 'email', example: 'john@example.com' },
             role: { type: 'string', example: 'user' },
-            createdat: { type: 'string', format: 'date-time' },
+            created_at: { type: 'string', example: '2025-08-10' },
+            updated_at: { type: 'string', example: '2025-08-10' },
           },
         },
         UserInput: {
@@ -84,15 +83,16 @@ const options = {
     ],
   },
   apis: [
-  path.join(__dirname, './routes/bookRoutes.js'),
-  path.join(__dirname, './routes/userRoutes.js'),
-] 
+    path.join(__dirname, './routes/bookRoutes.js'),
+    path.join(__dirname, './routes/userRoutes.js'),
+  ]
 };
+
 const swaggerSpec = swaggerJsDoc(options);
+
 const setupSwagger = (app) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   console.log('Swagger UI path:', '/api-docs');
-
 };
 
 module.exports = setupSwagger;

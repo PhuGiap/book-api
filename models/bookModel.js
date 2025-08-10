@@ -12,22 +12,22 @@ const BookModel = {
   },
 
   async create(data) {
-    const { title, author,createdAt, pages, genre, summary } = data;
+    const { title, author, pages, genre, summary } = data;
     const result = await pool.query(
-      `INSERT INTO books (title, author, published_date, pages, genre, summary)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [title, author,createdAt, pages, genre, summary]
+      `INSERT INTO books (title, author, pages, genre, summary, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, CURRENT_DATE, CURRENT_DATE) RETURNING *`,
+      [title, author, pages, genre, summary]
     );
     return result.rows[0];
   },
 
   async update(id, data) {
-    const { title, author, createdAt, pages, genre, summary } = data;
+    const { title, author, pages, genre, summary } = data;
     const result = await pool.query(
       `UPDATE books
-       SET title = $1, author = $2, published_date = $3, pages = $4, genre = $5, summary = $6
-       WHERE id = $7 RETURNING *`,
-      [title, author,createdAt, pages, genre, summary, id]
+       SET title = $1, author = $2, pages = $3, genre = $4, summary = $5, updated_at = CURRENT_DATE
+       WHERE id = $6 RETURNING *`,
+      [title, author, pages, genre, summary, id]
     );
     return result.rows[0];
   },
